@@ -1,0 +1,13 @@
+{
+    "editor.formatOnSave": true,
+    "files.autoSave": "afterDelay",
+    "editor.wordWrap": "on",
+    "[r]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "Posit.air-vscode"
+    },
+    "[quarto]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "quarto.quarto"
+    }
+}
