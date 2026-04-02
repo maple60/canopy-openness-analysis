@@ -1,2 +1,4 @@
 project:
   execute-dir: project
+
+bibliography: refs/references.bib
