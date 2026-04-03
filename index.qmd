@@ -1,0 +1,10 @@
+---
+title: "Canopy Openness Analysis"
+---
+
+このサイトは、樹冠開空度解析（DCP / DHP）の手順と実行例をまとめたものです。
+
+## コンテンツ
+
+- [Digital Cover Photography (DCP) の解析](notebooks/dcp.qmd)
+- [Digital Hemispherical Photography (DHP) の解析](notebooks/dhp.qmd)
