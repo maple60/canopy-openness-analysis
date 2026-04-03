@@ -1,5 +1,5 @@
 ---
-title: "Digital Cover Photography（DCP）の解析（非専門家向け）"
+title: "Digital Cover Photography（DCP）の解析"
 bibliography: references.bib
 ---
 
