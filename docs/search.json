@@ -95,14 +95,14 @@
     "href": "notebooks/dhp.html",
     "title": "Digital Hemispherical Photography（DHP）を使った樹冠開空度の解析",
     "section": "",
-    "text": "このノートでは、魚眼レンズや全天球カメラで撮影した林内写真から、 「空がどれくらい見えているか（= 樹冠開空度）」を数値化する方法を紹介します。\n\n専門的には Digital Hemispherical Photography (DHP) と呼ばれます\nR パッケージ hemispheR を使って解析します (hemispheR?)\n\n参考リンク:\n\nhemispheR - GitLab\nhemispheR - CRAN\n関連論文"
+    "text": "このノートでは、魚眼レンズや全天球カメラで撮影した林内写真から、 「空がどれくらい見えているか（= 樹冠開空度）」を数値化する方法を紹介します。\n\n専門的には Digital Hemispherical Photography (DHP) と呼ばれます\nR パッケージ hemispheR を使って解析します (Chianucci and Macek 2023)\n\n参考リンク:\n\nhemispheR - GitLab\nhemispheR - CRAN\n関連論文"
   },
   {
     "objectID": "notebooks/dhp.html#このノートの目的",
     "href": "notebooks/dhp.html#このノートの目的",
     "title": "Digital Hemispherical Photography（DHP）を使った樹冠開空度の解析",
     "section": "",
-    "text": "このノートでは、魚眼レンズや全天球カメラで撮影した林内写真から、 「空がどれくらい見えているか（= 樹冠開空度）」を数値化する方法を紹介します。\n\n専門的には Digital Hemispherical Photography (DHP) と呼ばれます\nR パッケージ hemispheR を使って解析します (hemispheR?)\n\n参考リンク:\n\nhemispheR - GitLab\nhemispheR - CRAN\n関連論文"
+    "text": "このノートでは、魚眼レンズや全天球カメラで撮影した林内写真から、 「空がどれくらい見えているか（= 樹冠開空度）」を数値化する方法を紹介します。\n\n専門的には Digital Hemispherical Photography (DHP) と呼ばれます\nR パッケージ hemispheR を使って解析します (Chianucci and Macek 2023)\n\n参考リンク:\n\nhemispheR - GitLab\nhemispheR - CRAN\n関連論文"
   },
   {
     "objectID": "notebooks/dhp.html#まず理解したいポイントやさしい説明",
@@ -130,7 +130,7 @@
     "href": "notebooks/dhp.html#前処理レンズ中心と半径の指定",
     "title": "Digital Hemispherical Photography（DHP）を使った樹冠開空度の解析",
     "section": "前処理（レンズ中心と半径の指定）",
-    "text": "前処理（レンズ中心と半径の指定）\nhemispheR::import_fisheye() で、 「どこが魚眼画像の中心か」「どこまでを解析対象にするか（半径）」を指定します。\n\nxc &lt;- dim(img)[2] / 2 # 画像幅の半分\nyc &lt;- dim(img)[1] / 2 # 画像高さの半分\nrc &lt;- 550             # 解析に使う半径（画像に応じて調整）\n\nimage_fisheye &lt;- import_fisheye(\n  image_path,\n  channel = 3,\n  circ.mask = list(xc = xc, yc = yc, rc = rc),\n  circular = TRUE,\n  gamma = 2.2,\n  stretch = FALSE,\n  display = TRUE,\n  message = TRUE\n)\n\nIt is a circular fisheye, where xc, yc and radius are 1024, 786, 550"
+    "text": "前処理（レンズ中心と半径の指定）\nhemispheR::import_fisheye() で、 「どこが魚眼画像の中心か」「どこまでを解析対象にするか（半径）」を指定します。\n\nxc &lt;- dim(img)[2] / 2 # 画像幅の半分\nyc &lt;- dim(img)[1] / 2 # 画像高さの半分\nrc &lt;- 550 # 解析に使う半径（画像に応じて調整）\n\nimage_fisheye &lt;- import_fisheye(\n  image_path,\n  channel = 3,\n  circ.mask = list(xc = xc, yc = yc, rc = rc),\n  circular = TRUE,\n  gamma = 2.2,\n  stretch = FALSE,\n  display = TRUE,\n  message = TRUE\n)\n\nIt is a circular fisheye, where xc, yc and radius are 1024, 786, 550"
   },
   {
     "objectID": "notebooks/dhp.html#空と樹冠の二値化",
