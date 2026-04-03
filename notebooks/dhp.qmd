@@ -8,7 +8,10 @@ bibliography: ../references.bib
 このノートでは、**魚眼レンズや全天球カメラで撮影した林内写真**から、
 「空がどれくらい見えているか（= 樹冠開空度）」を数値化する方法を紹介します。
 
-- 専門的には *Digital Hemispherical Photography (DHP)* と呼ばれます
+::: {.callout-note}
+「魚眼レンズや全天球カメラで撮影した林内写真」は、専門的にはDigital Hemispherical Photography (DHP)と呼ばれます
+:::
+
 - R パッケージ `hemispheR` を使って解析します [@chianucci2023]
 
 参考リンク:
@@ -17,7 +20,7 @@ bibliography: ../references.bib
 - [hemispheR - CRAN](https://cran.r-project.org/web/packages/hemispheR/index.html)
 - [関連論文](https://doi.org/10.1016%2Fj.agrformet.2023.109470)
 
-## まず理解したいポイント（やさしい説明）
+## まず理解したいポイント
 
 - 写真の中で「空」と「葉・枝」を分けます（二値化）
 - 空の割合が高いほど、林冠は「開いている」と解釈できます
