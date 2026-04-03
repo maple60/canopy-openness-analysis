@@ -9,7 +9,7 @@ bibliography: ../references.bib
 「空がどれくらい見えているか（= 樹冠開空度）」を数値化する方法を紹介します。
 
 - 専門的には *Digital Hemispherical Photography (DHP)* と呼ばれます
-- R パッケージ `hemispheR` を使って解析します [@hemispheR]
+- R パッケージ `hemispheR` を使って解析します [@chianucci2023]
 
 参考リンク:
 
@@ -57,7 +57,7 @@ terra::plotRGB(img) # 元画像を表示
 ```{r}
 xc <- dim(img)[2] / 2 # 画像幅の半分
 yc <- dim(img)[1] / 2 # 画像高さの半分
-rc <- 550             # 解析に使う半径（画像に応じて調整）
+rc <- 550 # 解析に使う半径（画像に応じて調整）
 
 image_fisheye <- import_fisheye(
   image_path,
@@ -116,4 +116,3 @@ DIFN（diffuse non-interceptance）は、
 
 - 値が高い: 空隙が多く、樹冠が開いている
 - 値が低い: 葉や枝が密で、樹冠が閉じている
-

@@ -183,4 +183,3 @@ df <- as.data.frame(out.cnp)
 df$GF <- 1 - df$FC
 head(df)
 ```
-
