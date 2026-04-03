@@ -1,57 +1,53 @@
 ---
-title: "Digital cover pshotographyの解析"
+title: "Digital Cover Photography（DCP）の解析"
 bibliography: references.bib
 ---
 
-Digital cover photographyの解析についてまとめます。 Digital cover photographyは、スマホなどの普通のカメラで撮影された林冠の写真から、どのくらいの割合で空が見えているかを定量化する方法です。 これにより、林冠の密度や構造を評価することができます。
+## このノートの目的
 
-解析には、Rの`coveR`パッケージを使用します。
+このノートでは、**スマートフォンや通常のカメラで撮影した林冠写真**から、
+「空がどれくらい見えるか」を定量化する流れを説明します。
 
-URLは以下になります。
+解析には R パッケージ `coveR` を使用します。
 
--   [coveR -GitLab](https://gitlab.com/fchianucci/coveR)
+- [coveR - GitLab](https://gitlab.com/fchianucci/coveR)
 
-coveRは、@chianucci2022 によって開発されたRパッケージで、デジタルカバーフォトグラフィーの解析を行うためのツールです。 このパッケージは、写真から空の割合を計算するための関数や、林冠の密度を評価するための機能を提供しています。
+`coveR` は @chianucci2022 で紹介されている、
+デジタルカバーフォトグラフィー解析のためのパッケージです。
 
 ::: {.callout-warning}
-@chianucci2022 の論文は、最新のパッケージと関数名が異なっており、論文の関数は使用できないので注意が必要です。
+@chianucci2022 の論文本文と、現在の `coveR` の関数名・仕様には差があります。
+そのため、論文のコードをそのまま実行すると動かない場合があります。
 :::
 
-::: callout-note
-## CRANでのインストール
+::: {.callout-note}
+## インストール方法について
 
-coveRはCRANに登録されていないため、GitLabから直接インストールする必要があります。 CRANに登録されていない理由としては、写真のメタデータであるEXIF情報を処理するための機能が入っているためであると説明されていました ([参考](https://cran.r-project.org/web/packages/coveR2/readme/README.html))。
+`coveR` は CRAN 未登録のため、通常は GitLab からインストールします。
 
-もしCRANからインストールしたい場合は、EXIF情報を処理する機能を削除したバージョンである[coveR2](https://cran.r-project.org/web/packages/coveR2/index.html)を使用できます。
+CRAN 版を使いたい場合は、関連パッケージの
+[coveR2](https://cran.r-project.org/web/packages/coveR2/index.html) も選択肢です。
 :::
 
-以下に、基本的な解析の流れを示します。
+## 解析の全体像（先に流れを把握）
 
-1.  画像の読み込み
-2.  画像の二値化
-3.  ギャップと林冠の分類
-4.  ギャップのラベリング
-5.  サイズに応じたギャップの分類
-6.  ギャップサイズ基づいた林冠情報の取得
-
-以下では、これらのステップを実際の解析コードを使って、順に説明していきます。
+1. 画像を読み込む
+2. 空と林冠を二値化する
+3. 空隙（ギャップ）をラベリングする
+4. ギャップサイズで分類する
+5. 開空度（Gap Fraction）などの指標を計算する
 
 ## パッケージのインストールと読み込み
 
-パッケージをインストールしていない場合は、以下のコードを実行してインストールします。
-
-``` r
+```r
 # renvを使用している場合
 renv::install("git::https://github.com/cmartin/EXIFr.git")
 renv::install("gitlab::fchianucci/coveR")
 
 # renvを使用していない場合
-# もしdevtoolsがインストールされていない場合は、まずこれをインストールしてください。
 # install.packages("devtools")
 devtools::install_gitlab("fchianucci/coveR")
 ```
-
-インストール後、パッケージを読み込みます。
 
 ```{r}
 library(coveR)
@@ -59,15 +55,14 @@ library(coveR)
 
 ## 画像の読み込み
 
-解析したい画像を読み込みます。 `terra`パッケージを使用して、画像を確認します。
-
 ```{r}
-# 画像のパスを指定
 image_path <- "data/dcp_example_21rinpan2.jpg"
-terra::plotRGB(terra::rast(image_path)) # もとの画像を表示
+terra::plotRGB(terra::rast(image_path))
 ```
 
-画像の赤、緑、青の各チャンネルを確認します。
+## RGB チャンネルの確認
+
+空と林冠の分離にどのチャンネルが有効かを確認します。
 
 ```{r}
 terra::plot(
@@ -76,73 +71,59 @@ terra::plot(
     terra::rast(image_path, lyrs = 2),
     terra::rast(image_path, lyrs = 3)
   )),
-  main = c('red', 'green', 'blue'),
+  main = c("red", "green", "blue"),
   col = gray.colors(10, start = 0, end = 1),
   axes = FALSE
 )
 ```
 
-青のチャンネルが、空と林冠のコントラストが最も高いことがわかります。
+青チャンネルでコントラストが高い場合が多いため、`coveR` でも青を活用します。
 
 ```{r}
 terra::plot(
   terra::rast(image_path, lyrs = 3),
   col = gray.colors(5, start = 0, end = 1),
-  main = 'blue channel'
+  main = "blue channel"
 )
 ```
 
-このため、coveRでは、青のチャンネルを使用して、空と林冠を二値化します。 `coveR`パッケージの`coveR()`関数を使用して、画像を二値化し、解析を行います。 デフォルトでは、二値化の方法としてOtsuの方法 [@otsu1979]が使用されますが、他の方法も選択できます。 以下のコードでは、二値化の方法をOtsuに指定し、解析結果を表示します。
+## `coveR()` による基本解析
 
 ```{r}
-res <- coveR(image_path, thdmethod = 'Otsu', display = TRUE)
-```
-
-解析結果には、空の割合や林冠の密度などの情報が含まれています。 `res`オブジェクトを確認してみましょう。
-
-```{r}
+res <- coveR(image_path, thdmethod = "Otsu", display = TRUE)
 print(res)
 ```
 
 ## ギャップのラベリングとサイズ分類
 
-白が空 (ギャップ)、黒が林冠として二値化された画像を使用して、ギャップのラベリングとサイズ分類を行います。 `mgc`パッケージの`ConnCompLabel()`関数を使用して、連結成分をラベリングします。
-これで、それぞれのラベルに対して、ギャップのサイズを計算し、サイズに応じてギャップを分類することができます。
-
 ```{r}
-img <- terra::rast(image_path, lyrs = 3) # 青のチャンネルを使用
+img <- terra::rast(image_path, lyrs = 3)
 myimg.rst <- terra::classify(img, rbind(c(-Inf, 105, 0), c(105, Inf, 1)))
 
-vals <- as.matrix(myimg.rst, wide = TRUE)
-
-
 vals <- matrix(
-  terra::values(myimg.rst, format = 'matrix'),
+  terra::values(myimg.rst, format = "matrix"),
   nrow = nrow(myimg.rst),
-  byrow = T
+  byrow = TRUE
 )
+
 y <- mgc::ConnCompLabel(vals)
 yr <- terra::rast(nrows = nrow(myimg.rst), ncols = ncol(myimg.rst), vals = y)
-
 
 ext <- terra::ext(myimg.rst)
 terra::set.ext(yr, ext)
 terra::set.names(yr, base::names(myimg.rst))
+
 terra::plot(
   yr,
-  col = c('black', rainbow(1000, start = 0, end = 1)),
-  main = 'labelled gaps',
+  col = c("black", rainbow(1000, start = 0, end = 1)),
+  main = "labelled gaps",
   axes = FALSE,
   legend = FALSE,
-  asp = 1 # アスペクト比を1:1に設定する
+  asp = 1
 )
 ```
 
-## ギャップサイズに基づいた林冠の分類
-
-ギャップのサイズに基づいて、林冠を分類します。
-例えば、ギャップのサイズが全体の1.3%以上であれば、大きなギャップと分類することができます。
-以下のコードでは、ギャップのサイズを計算し、サイズに応じて林冠を分類しています。
+## ギャップサイズに基づいた分類
 
 ```{r}
 tbr <- data.frame(table(terra::values(yr)))
@@ -150,63 +131,56 @@ tbf <- tbr
 tbf$id <- names(yr)
 tbf$NR <- sum(tbf$Freq)
 tbf$gL <- "Small_gap"
-# ギャップのサイズが0であれば、林冠と分類
+
 tbf$gL[as.character(tbf$Var1) == "0"] <- "Canopy"
-# ギャップのサイズが全体の1.3%以上であれば、大きなギャップと分類
 tbf$gL[
   as.character(tbf$Var1) != "0" & tbf$Freq >= tbf$NR * 1.3 / 100
 ] <- "Large_gap"
-head(tbf) # データフレームの先頭を表示
+
+head(tbf)
 ```
 
-## 分類されたギャップと林冠のピクセルから林冠の情報を取得
-
-`Small_gap`、`Large_gap`、`Canopy`の分類に基づいて、林冠の情報を取得します。
-`coveR()`関数でBeer-Lambertの法則を使用して、林冠の情報を計算することができます。
-
-葉面積の逆変換には、減衰係数 $k$を使用します。
-`coveR()`関数の`k`引数に減衰係数を指定することで、葉面積の逆変換を行うことができます。
-デフォルトでは、$k = 0.5$、つまり球状の葉の角度分布に設定されています。
+## 分類に基づいた林冠情報の取得
 
 ```{r}
-out.cnp <- coveR(image_path, k = 0.5, display = F)
+out.cnp <- coveR(image_path, k = 0.5, display = FALSE)
 head(out.cnp)
 ```
-
-林冠を分類し、小さいギャップを1、大きいギャップを0.5、林冠を0とすることで、林冠の情報を取得します。
 
 ```{r}
 tbf.new <- as.data.frame(tbf)
 rec <- c("Large_gap" = 0.5, "Small_gap" = 1, "Canopy" = 0)
-tbf.new$col <- unname(rec[tbf.new$gL]) # gLの値に基づいてcol列を作成
-tbf.new <- tbf.new[, c("Var1", "col")] # 必要な列だけ残す
-tbf.new$Var1 <- as.integer(as.character(tbf.new$Var1)) # Var1を整数に変換
+tbf.new$col <- unname(rec[tbf.new$gL])
+tbf.new <- tbf.new[, c("Var1", "col")]
+tbf.new$Var1 <- as.integer(as.character(tbf.new$Var1))
+
 canopy.rst <- terra::classify(yr, as.matrix(tbf.new))
-terra::set.crs(canopy.rst, terra::crs(img)) # imgの座標参照系をcanopy.rstに設定
-terra::set.names(canopy.rst, base::names(yr)) # yrの名前をcanopy.rstに設定
-terra::set.ext(canopy.rst, ext) # extをcanopy.rstに設定
+terra::set.crs(canopy.rst, terra::crs(img))
+terra::set.names(canopy.rst, base::names(yr))
+terra::set.ext(canopy.rst, ext)
 
 terra::plot(
   canopy.rst,
   col = gray.colors(3, start = 0, end = 1),
-  main = 'classified image'
+  main = "classified image"
 )
 ```
 
-## 開空度の計算
+## 開空度（Gap Fraction）の計算
 
-開空度は、空のピクセル数を全体のピクセル数で割った値として計算されます。
-`coveR()`関数の出力から、開空度(gap fraction, GF)を計算することができます。
+`coveR()` の出力に含まれる `FC`（Canopy Fraction）から、
+開空度 `GF`（Gap Fraction）を次式で計算できます。
 
 $$
 GF = 1 - FC = 1 - \frac{G}{NR}
 $$
 
-ここで、$G$はギャップのピクセル数、$NR$は全体のピクセル数、$FC$は林冠の割合を表します。
+- $G$: ギャップ（空）ピクセル数
+- $NR$: 全ピクセル数
 
 ```{r}
 df <- as.data.frame(out.cnp)
 df$GF <- 1 - df$FC
+head(df)
 ```
 
-これで、開空度を計算することができました。

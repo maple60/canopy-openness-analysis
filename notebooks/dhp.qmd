@@ -1,16 +1,27 @@
 ---
-title: "digital hemispherical photographyを使用した樹冠開空度の解析"
+title: "Digital Hemispherical Photography（DHP）を使った樹冠開空度の解析"
 bibliography: references.bib
 ---
 
-Digital hemisperical photograpyは、いわゆる魚眼レンズとか、全天球カメラと呼ばれるものを使用して撮影した写真を利用して、樹冠の開空度を定量化する方法です。
-これにより、林冠の密度や構造を評価することができます。
+## このノートの目的
 
-今回は、Rの`hemispheR`パッケージを使用して、digital hemispherical photographyの解析を行いました [@hemispheR]。
+このノートでは、**魚眼レンズや全天球カメラで撮影した林内写真**から、
+「空がどれくらい見えているか（= 樹冠開空度）」を数値化する方法を紹介します。
+
+- 専門的には *Digital Hemispherical Photography (DHP)* と呼ばれます
+- R パッケージ `hemispheR` を使って解析します [@hemispheR]
+
+参考リンク:
 
 - [hemispheR - GitLab](https://gitlab.com/fchianucci/hemispheR)
 - [hemispheR - CRAN](https://cran.r-project.org/web/packages/hemispheR/index.html)
-- [論文](https://doi.org/10.1016%2Fj.agrformet.2023.109470)
+- [関連論文](https://doi.org/10.1016%2Fj.agrformet.2023.109470)
+
+## まず理解したいポイント（やさしい説明）
+
+- 写真の中で「空」と「葉・枝」を分けます（二値化）
+- 空の割合が高いほど、林冠は「開いている」と解釈できます
+- 撮影条件（明るさ、露出、レンズ中心のずれ）で結果が変わるため、前処理が重要です
 
 ## パッケージのインストールと読み込み
 
@@ -22,12 +33,9 @@ renv::install("gitlab::fchianucci/hemispheR")
 install.packages("hemispheR")
 
 # 開発版をインストールする場合
-# devtoolsがインストールされていない場合は、まずこれをインストールしてください。
 # install.packages("devtools")
 devtools::install_git("https://gitlab.com/fchianucci/hemispheR")
 ```
-
-インストール後、パッケージを読み込みます。
 
 ```{r}
 library(hemispheR)
@@ -35,24 +43,22 @@ library(hemispheR)
 
 ## 画像の読み込み
 
-解析したい画像を読み込みます。 `terra`パッケージを使用して、画像を確認します。
-
 ```{r}
-# 画像のパスを指定
 image_path <- "data/dhp_example_19rinpan1_2.jpg"
 img <- terra::rast(image_path)
-terra::plotRGB(img) # もとの画像を表示
+terra::plotRGB(img) # 元画像を表示
 ```
 
-## 前処理
+## 前処理（レンズ中心と半径の指定）
 
-画像の中心座標と半径を指定して、`hemispheR::import_fisheye()` で魚眼レンズの画像を前処理します。
-これにより、樹冠の開空度を正確に解析できるようになります。
+`hemispheR::import_fisheye()` で、
+「どこが魚眼画像の中心か」「どこまでを解析対象にするか（半径）」を指定します。
 
 ```{r}
-xc <- dim(img)[2] / 2 # 画像の幅の半分を中心座標として指定
-yc <- dim(img)[1] / 2 # 画像の高さの半分を中心座標として指定
-rc <- 550 # 画像の半径を指定（適宜調整してください）
+xc <- dim(img)[2] / 2 # 画像幅の半分
+yc <- dim(img)[1] / 2 # 画像高さの半分
+rc <- 550             # 解析に使う半径（画像に応じて調整）
+
 image_fisheye <- import_fisheye(
   image_path,
   channel = 3,
@@ -65,12 +71,15 @@ image_fisheye <- import_fisheye(
 )
 ```
 
-`hemispheR::binarize_fisheye()` を使用して、画像を二値化します。ここでは、Otsuの方法を使用して自動的に閾値を決定しています。
+## 空と樹冠の二値化
+
+`hemispheR::binarize_fisheye()` で、画像を「空（白）」と「樹冠（黒）」に分けます。
+ここでは自動しきい値法の Otsu 法を使います。
 
 ```{r}
 img_binary <- binarize_fisheye(
   image_fisheye,
-  method = 'Otsu',
+  method = "Otsu",
   zonal = FALSE,
   manual = NULL,
   display = TRUE,
@@ -78,16 +87,13 @@ img_binary <- binarize_fisheye(
 )
 ```
 
-## ギャップの解析
-
-`hemispheR::gapfrac_fisheye()` を使用して、二値化された画像から樹冠の開空度を解析します
-ここでは、最大視線傾斜角を90度に設定し、7つのリングと8つのセグメントで解析しています。
+## ギャップ率の解析
 
 ```{r}
 gap_frac <- gapfrac_fisheye(
   img_binary,
   maxVZA = 90,
-  lens = "equidistant", # Default
+  lens = "equidistant", # デフォルト
   startVZA = 0,
   endVZA = 70,
   nrings = 7,
@@ -97,16 +103,17 @@ gap_frac <- gapfrac_fisheye(
 )
 ```
 
-## 樹冠開空度の結果を表示します。
-
-`hemispheR::canopy_fisheye()` を使用して、ギャップの解析結果から樹冠開空度を計算します。
+## 樹冠開空度の計算と解釈
 
 ```{r}
 canopy <- canopy_fisheye(gap_frac)
 canopy
 ```
 
-開空度はDIFNにあたります。
-DIFNはdiffuse non-interceptanceの略で、日本語では「拡散非遮断率」と呼ぶのが良いでしょうか。
-この値は、樹冠を通過する拡散光の割合を示しています。
-値が高いほど、樹冠が開いていることを意味し、0-100の範囲で表されます。
+この出力に含まれる代表値のひとつが **DIFN** です。
+DIFN（diffuse non-interceptance）は、
+「拡散光が樹冠に遮られずに通る割合」を表す指標です。
+
+- 値が高い: 空隙が多く、樹冠が開いている
+- 値が低い: 葉や枝が密で、樹冠が閉じている
+
