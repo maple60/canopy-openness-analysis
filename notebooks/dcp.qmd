@@ -1,6 +1,6 @@
 ---
 title: "Digital Cover Photography（DCP）の解析"
-bibliography: references.bib
+bibliography: ../references.bib
 ---
 
 ## このノートの目的

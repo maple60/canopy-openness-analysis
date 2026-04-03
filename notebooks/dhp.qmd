@@ -1,6 +1,6 @@
 ---
 title: "Digital Hemispherical Photography（DHP）を使った樹冠開空度の解析"
-bibliography: references.bib
+bibliography: ../references.bib
 ---
 
 ## このノートの目的
