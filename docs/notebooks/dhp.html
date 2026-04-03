@@ -170,7 +170,7 @@ div.csl-indent {
    
   <ul>
   <li><a href="#このノートの目的" id="toc-このノートの目的" class="nav-link active" data-scroll-target="#このノートの目的">このノートの目的</a></li>
-  <li><a href="#まず理解したいポイントやさしい説明" id="toc-まず理解したいポイントやさしい説明" class="nav-link" data-scroll-target="#まず理解したいポイントやさしい説明">まず理解したいポイント（やさしい説明）</a></li>
+  <li><a href="#まず理解したいポイント" id="toc-まず理解したいポイント" class="nav-link" data-scroll-target="#まず理解したいポイント">まず理解したいポイント</a></li>
   <li><a href="#パッケージのインストールと読み込み" id="toc-パッケージのインストールと読み込み" class="nav-link" data-scroll-target="#パッケージのインストールと読み込み">パッケージのインストールと読み込み</a></li>
   <li><a href="#画像の読み込み" id="toc-画像の読み込み" class="nav-link" data-scroll-target="#画像の読み込み">画像の読み込み</a></li>
   <li><a href="#前処理レンズ中心と半径の指定" id="toc-前処理レンズ中心と半径の指定" class="nav-link" data-scroll-target="#前処理レンズ中心と半径の指定">前処理（レンズ中心と半径の指定）</a></li>
@@ -205,8 +205,20 @@ div.csl-indent {
 <section id="このノートの目的" class="level2">
 <h2 class="anchored" data-anchor-id="このノートの目的">このノートの目的</h2>
 <p>このノートでは、<strong>魚眼レンズや全天球カメラで撮影した林内写真</strong>から、 「空がどれくらい見えているか（= 樹冠開空度）」を数値化する方法を紹介します。</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>「魚眼レンズや全天球カメラで撮影した林内写真」は、専門的にはDigital Hemispherical Photography (DHP)と呼ばれます</p>
+</div>
+</div>
 <ul>
-<li>専門的には <em>Digital Hemispherical Photography (DHP)</em> と呼ばれます</li>
 <li>R パッケージ <code>hemispheR</code> を使って解析します <span class="citation" data-cites="chianucci2023">(<a href="#ref-chianucci2023" role="doc-biblioref">Chianucci and Macek 2023</a>)</span></li>
 </ul>
 <p>参考リンク:</p>
@@ -216,8 +228,8 @@ div.csl-indent {
 <li><a href="https://doi.org/10.1016%2Fj.agrformet.2023.109470">関連論文</a></li>
 </ul>
 </section>
-<section id="まず理解したいポイントやさしい説明" class="level2">
-<h2 class="anchored" data-anchor-id="まず理解したいポイントやさしい説明">まず理解したいポイント（やさしい説明）</h2>
+<section id="まず理解したいポイント" class="level2">
+<h2 class="anchored" data-anchor-id="まず理解したいポイント">まず理解したいポイント</h2>
 <ul>
 <li>写真の中で「空」と「葉・枝」を分けます（二値化）</li>
 <li>空の割合が高いほど、林冠は「開いている」と解釈できます</li>

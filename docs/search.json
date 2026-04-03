@@ -95,21 +95,21 @@
     "href": "notebooks/dhp.html",
     "title": "Digital Hemispherical Photography（DHP）を使った樹冠開空度の解析",
     "section": "",
-    "text": "このノートでは、魚眼レンズや全天球カメラで撮影した林内写真から、 「空がどれくらい見えているか（= 樹冠開空度）」を数値化する方法を紹介します。\n\n専門的には Digital Hemispherical Photography (DHP) と呼ばれます\nR パッケージ hemispheR を使って解析します (Chianucci and Macek 2023)\n\n参考リンク:\n\nhemispheR - GitLab\nhemispheR - CRAN\n関連論文"
+    "text": "このノートでは、魚眼レンズや全天球カメラで撮影した林内写真から、 「空がどれくらい見えているか（= 樹冠開空度）」を数値化する方法を紹介します。\n\n\n\n\n\n\nNote\n\n\n\n「魚眼レンズや全天球カメラで撮影した林内写真」は、専門的にはDigital Hemispherical Photography (DHP)と呼ばれます\n\n\n\nR パッケージ hemispheR を使って解析します (Chianucci and Macek 2023)\n\n参考リンク:\n\nhemispheR - GitLab\nhemispheR - CRAN\n関連論文"
   },
   {
     "objectID": "notebooks/dhp.html#このノートの目的",
     "href": "notebooks/dhp.html#このノートの目的",
     "title": "Digital Hemispherical Photography（DHP）を使った樹冠開空度の解析",
     "section": "",
-    "text": "このノートでは、魚眼レンズや全天球カメラで撮影した林内写真から、 「空がどれくらい見えているか（= 樹冠開空度）」を数値化する方法を紹介します。\n\n専門的には Digital Hemispherical Photography (DHP) と呼ばれます\nR パッケージ hemispheR を使って解析します (Chianucci and Macek 2023)\n\n参考リンク:\n\nhemispheR - GitLab\nhemispheR - CRAN\n関連論文"
+    "text": "このノートでは、魚眼レンズや全天球カメラで撮影した林内写真から、 「空がどれくらい見えているか（= 樹冠開空度）」を数値化する方法を紹介します。\n\n\n\n\n\n\nNote\n\n\n\n「魚眼レンズや全天球カメラで撮影した林内写真」は、専門的にはDigital Hemispherical Photography (DHP)と呼ばれます\n\n\n\nR パッケージ hemispheR を使って解析します (Chianucci and Macek 2023)\n\n参考リンク:\n\nhemispheR - GitLab\nhemispheR - CRAN\n関連論文"
   },
   {
-    "objectID": "notebooks/dhp.html#まず理解したいポイントやさしい説明",
-    "href": "notebooks/dhp.html#まず理解したいポイントやさしい説明",
+    "objectID": "notebooks/dhp.html#まず理解したいポイント",
+    "href": "notebooks/dhp.html#まず理解したいポイント",
     "title": "Digital Hemispherical Photography（DHP）を使った樹冠開空度の解析",
-    "section": "まず理解したいポイント（やさしい説明）",
-    "text": "まず理解したいポイント（やさしい説明）\n\n写真の中で「空」と「葉・枝」を分けます（二値化）\n空の割合が高いほど、林冠は「開いている」と解釈できます\n撮影条件（明るさ、露出、レンズ中心のずれ）で結果が変わるため、前処理が重要です"
+    "section": "まず理解したいポイント",
+    "text": "まず理解したいポイント\n\n写真の中で「空」と「葉・枝」を分けます（二値化）\n空の割合が高いほど、林冠は「開いている」と解釈できます\n撮影条件（明るさ、露出、レンズ中心のずれ）で結果が変わるため、前処理が重要です"
   },
   {
     "objectID": "notebooks/dhp.html#パッケージのインストールと読み込み",
