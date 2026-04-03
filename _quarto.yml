@@ -1,4 +1,23 @@
 project:
+  type: website
+  output-dir: docs
   execute-dir: project
 
-bibliography: refs/references.bib
+website: 
+  title: "開空度の解析"
+  description: "Analysis of canopy openness using R and Quarto"
+  navbar: 
+    left:
+      - href: index.qmd
+        text: "Home"
+      - href: notebooks/dcp.qmd
+        text: "DCPの解析"
+      - href: notebooks/dhp.qmd
+        text: "DHPの解析"
+
+format:
+  html:
+    toc: true
+    theme: cosmo
+
+bibliography: references.bib
