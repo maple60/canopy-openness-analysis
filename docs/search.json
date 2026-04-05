@@ -4,14 +4,14 @@
     "href": "notebooks/dcp.html",
     "title": "Digital Cover Photography（DCP）の解析",
     "section": "",
-    "text": "このノートでは、スマートフォンや通常のカメラで撮影した林冠写真から、 「空がどれくらい見えるか」を定量化する流れを説明します。\n解析には R パッケージ coveR を使用します。\n\ncoveR - GitLab\n\ncoveR は Chianucci, Ferrara, and Puletti (2022) で紹介されている、 デジタルカバーフォトグラフィー解析のためのパッケージです。\n\n\n\n\n\n\nWarning\n\n\n\nChianucci, Ferrara, and Puletti (2022) の論文本文と、現在の coveR の関数名・仕様には差があります。 そのため、論文のコードをそのまま実行すると動かない場合があります。\n\n\n\n\n\n\n\n\nインストール方法について\n\n\n\ncoveR は CRAN 未登録のため、通常は GitLab からインストールします。\nCRAN 版を使いたい場合は、関連パッケージの coveR2 も選択肢です。"
+    "text": "このノートでは、スマートフォンや通常のカメラで撮影した林冠写真から、 「空がどれくらい見えるか」を定量化する流れを説明します。\n解析には R パッケージ coveR を使用します。\n\ncoveR - GitLab\n\ncoveR は Chianucci et al. (2022) で紹介されている、 デジタルカバーフォトグラフィー解析のためのパッケージです。\n\n\n\n\n\n\nWarning\n\n\n\nChianucci et al. (2022) の論文本文と、現在の coveR の関数名・仕様には差があります。 そのため、論文のコードをそのまま実行すると動かない場合があります。\n\n\n\n\n\n\n\n\nNoteインストール方法について\n\n\n\ncoveR は CRAN 未登録のため、通常は GitLab からインストールします。\nCRAN 版を使いたい場合は、関連パッケージの coveR2 も選択肢です。"
   },
   {
     "objectID": "notebooks/dcp.html#このノートの目的",
     "href": "notebooks/dcp.html#このノートの目的",
     "title": "Digital Cover Photography（DCP）の解析",
     "section": "",
-    "text": "このノートでは、スマートフォンや通常のカメラで撮影した林冠写真から、 「空がどれくらい見えるか」を定量化する流れを説明します。\n解析には R パッケージ coveR を使用します。\n\ncoveR - GitLab\n\ncoveR は Chianucci, Ferrara, and Puletti (2022) で紹介されている、 デジタルカバーフォトグラフィー解析のためのパッケージです。\n\n\n\n\n\n\nWarning\n\n\n\nChianucci, Ferrara, and Puletti (2022) の論文本文と、現在の coveR の関数名・仕様には差があります。 そのため、論文のコードをそのまま実行すると動かない場合があります。\n\n\n\n\n\n\n\n\nインストール方法について\n\n\n\ncoveR は CRAN 未登録のため、通常は GitLab からインストールします。\nCRAN 版を使いたい場合は、関連パッケージの coveR2 も選択肢です。"
+    "text": "このノートでは、スマートフォンや通常のカメラで撮影した林冠写真から、 「空がどれくらい見えるか」を定量化する流れを説明します。\n解析には R パッケージ coveR を使用します。\n\ncoveR - GitLab\n\ncoveR は Chianucci et al. (2022) で紹介されている、 デジタルカバーフォトグラフィー解析のためのパッケージです。\n\n\n\n\n\n\nWarning\n\n\n\nChianucci et al. (2022) の論文本文と、現在の coveR の関数名・仕様には差があります。 そのため、論文のコードをそのまま実行すると動かない場合があります。\n\n\n\n\n\n\n\n\nNoteインストール方法について\n\n\n\ncoveR は CRAN 未登録のため、通常は GitLab からインストールします。\nCRAN 版を使いたい場合は、関連パッケージの coveR2 も選択肢です。"
   },
   {
     "objectID": "notebooks/dcp.html#解析の全体像先に流れを把握",

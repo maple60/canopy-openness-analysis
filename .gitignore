@@ -5,3 +5,5 @@
 
 /.quarto/
 *.af
+
+**/*.quarto_ipynb
